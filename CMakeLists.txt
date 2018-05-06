@@ -60,6 +60,9 @@ find_package(ZLIB CONFIG REQUIRED)
 hunter_add_package(Protobuf)
 find_package(Protobuf CONFIG REQUIRED)
 
+hunter_add_package(Leathers)
+find_package(Leathers CONFIG REQUIRED)
+
 if(OSMPBF_BUILD_TESTS)
   hunter_add_package(GTest)
   find_package(GMock CONFIG REQUIRED)
@@ -71,7 +74,66 @@ if(OSMPBF_BUILD_BENCHMARKS)
 endif()
 
 # ------------------------------------------------------------------------------------------------ #
+# Compiler Configuration                                                                           #
+# ------------------------------------------------------------------------------------------------ #
+
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# ------------------------------------------------------------------------------------------------ #
+# Protobuf                                                                                         #
+# ------------------------------------------------------------------------------------------------ #
+
+set(PBF_SOURCE_DIR ${CMAKE_CURRENT_BINARY_DIR}/protobuf)
+
+file(MAKE_DIRECTORY ${PBF_SOURCE_DIR})
+
+set(PBF_DEFINITION_FILES
+  protobuf/fileformat.proto
+  protobuf/osmformat.proto
+)
+set(PBF_SOURCE_FILES
+  ${PBF_SOURCE_DIR}/fileformat.pb.h
+  ${PBF_SOURCE_DIR}/fileformat.pb.cc
+  ${PBF_SOURCE_DIR}/osmformat.pb.h
+  ${PBF_SOURCE_DIR}/osmformat.pb.cc
+)
+
+add_custom_command(OUTPUT ${PBF_SOURCE_FILES}
+  COMMENT "Generating protobuf implementation files..."
+
+  COMMAND protobuf::protoc
+    -I=${CMAKE_CURRENT_SOURCE_DIR}
+    --cpp_out=${PBF_SOURCE_DIR}
+    ${PBF_DEFINITION_FILES}
+
+  DEPENDS ${PBF_DEFINITION_FILES}
+)
+
+add_custom_target(osmpbf.protobuf
+  DEPENDS ${PBF_SOURCE_FILES}
+  SOURCES ${PBF_DEFINITION_FILES}
+)
+
+# ------------------------------------------------------------------------------------------------ #
 # Library: osmpbf                                                                                  #
 # ------------------------------------------------------------------------------------------------ #
 
-# target_link_libraries(... ZLIB::zlib protobuf::libprotobuf)
+add_library(osmpbf STATIC
+  source/fileformat.cpp
+  source/osmformat.cpp
+)
+
+target_include_directories(osmpbf
+  PRIVATE
+    ${PBF_SOURCE_DIR}
+)
+
+add_dependencies(osmpbf osmpbf.protobuf)
+
+target_link_libraries(osmpbf
+  PRIVATE
+    Leathers::leathers
+    ZLIB::zlib
+    protobuf::libprotobuf
+)
