@@ -29,6 +29,12 @@
  *                                                                                                *
  * ============================================================================================== */
 
-#include <benchmark/benchmark.h>
+// clang-format off
+#include <leathers/push>
+#include <leathers/all>
 
+# include <benchmark/benchmark.h>
 BENCHMARK_MAIN();
+
+#include <leathers/pop>
+// clang-format on

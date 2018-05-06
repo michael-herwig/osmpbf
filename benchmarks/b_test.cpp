@@ -29,12 +29,23 @@
  *                                                                                                *
  * ============================================================================================== */
 
-#include <benchmark/benchmark.h>
-#include <string>
-#include <thread>
+// clang-format off
+#include <leathers/push>
+#include <leathers/all>
+# include <benchmark/benchmark.h>
+# include <string>
+# include <thread>
+#include <leathers/pop>
+// clang-format on
 
 static void BM_Test(benchmark::State &state) {
   for (auto _ : state)
     std::string{/* */};
 }
+
+// clang-format off
+#include <leathers/push>
+#include <leathers/all>
 BENCHMARK(BM_Test);
+#include <leathers/pop>
+// clang-format on
