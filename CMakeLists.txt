@@ -64,6 +64,8 @@ project(osmpbf
 option(OSMPBF_BUILD_TESTS "Enables integration of test suites" OFF)
 option(OSMPBF_BUILD_BENCHMARKS "Enables integration of benchmarks" OFF)
 
+option(OSMPBF_ENABLE_CPPCHECK "Enables static analyzer 'cppcheck'" OFF)
+
 # ------------------------------------------------------------------------------------------------ #
 # Dependencies                                                                                     #
 # ------------------------------------------------------------------------------------------------ #
@@ -98,6 +100,17 @@ if(MSVC)
   set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /ignore:4099")
   string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /WX")
+endif()
+
+# ------------------------------------------------------------------------------------------------ #
+# cppcheck                                                                                         #
+# ------------------------------------------------------------------------------------------------ #
+
+if(OSMPBF_ENABLE_CPPCHECK)
+  find_program(CMAKE_CXX_CPPCHECK NAMES cppcheck)
+  if(NOT CMAKE_CXX_CPPCHECK)
+    message(FATAL_ERROR "Could not find cppcheck.")
+  endif()
 endif()
 
 # ------------------------------------------------------------------------------------------------ #
