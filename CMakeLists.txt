@@ -94,6 +94,12 @@ endif()
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+if(MSVC)
+  set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG} /ignore:4099")
+  string(REGEX REPLACE "/W[0-4]" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /WX")
+endif()
+
 # ------------------------------------------------------------------------------------------------ #
 # Protobuf                                                                                         #
 # ------------------------------------------------------------------------------------------------ #
@@ -153,6 +159,23 @@ target_link_libraries(osmpbf
 )
 
 # ------------------------------------------------------------------------------------------------ #
+# Tests                                                                                            #
+# ------------------------------------------------------------------------------------------------ #
+
+if(OSMPBF_BUILD_TESTS)
+  add_executable(osmpbf-tests
+    tests/t_test.cpp
+  )
+
+  target_link_libraries(osmpbf-tests
+    PRIVATE
+      Leathers::leathers
+      GMock::main
+      osmpbf
+  )
+endif()
+
+# ------------------------------------------------------------------------------------------------ #
 # Benchmarks                                                                                       #
 # ------------------------------------------------------------------------------------------------ #
 
@@ -164,6 +187,7 @@ if(OSMPBF_BUILD_BENCHMARKS)
 
   target_link_libraries(osmpbf-benchmarks
     PRIVATE
+      Leathers::leathers
       benchmark::benchmark
       osmpbf
   )
