@@ -1,0 +1,5 @@
+# reserved for caching build artifacts
+build/
+
+# QtCreator user specific configuration
+CMakeLists.txt.user
