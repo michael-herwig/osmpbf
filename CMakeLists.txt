@@ -186,6 +186,9 @@ if(OSMPBF_BUILD_TESTS)
       GMock::main
       osmpbf
   )
+
+  enable_testing()
+  add_test(osmpbf-test COMMAND osmpbf-test)
 endif()
 
 # ------------------------------------------------------------------------------------------------ #
