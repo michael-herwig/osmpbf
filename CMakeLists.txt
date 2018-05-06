@@ -106,14 +106,14 @@ set(PBF_DEFINITION_FILES
   protobuf/fileformat.proto
   protobuf/osmformat.proto
 )
-set(PBF_SOURCE_FILES
-  ${PBF_SOURCE_DIR}/fileformat.pb.h
-  ${PBF_SOURCE_DIR}/fileformat.pb.cc
-  ${PBF_SOURCE_DIR}/osmformat.pb.h
-  ${PBF_SOURCE_DIR}/osmformat.pb.cc
+set(PBF_GENERATED_FILES
+  ${PBF_SOURCE_DIR}/protobuf/fileformat.pb.h
+  ${PBF_SOURCE_DIR}/protobuf/fileformat.pb.cc
+  ${PBF_SOURCE_DIR}/protobuf/osmformat.pb.h
+  ${PBF_SOURCE_DIR}/protobuf/osmformat.pb.cc
 )
 
-add_custom_command(OUTPUT ${PBF_SOURCE_FILES}
+add_custom_command(OUTPUT ${PBF_GENERATED_FILES}
   COMMENT "Generating protobuf implementation files..."
 
   COMMAND protobuf::protoc
@@ -124,8 +124,8 @@ add_custom_command(OUTPUT ${PBF_SOURCE_FILES}
   DEPENDS ${PBF_DEFINITION_FILES}
 )
 
-add_custom_target(osmpbf.protobuf
-  DEPENDS ${PBF_SOURCE_FILES}
+add_custom_target(osmpbf-protobuf
+  DEPENDS ${PBF_GENERATED_FILES}
   SOURCES ${PBF_DEFINITION_FILES}
 )
 
@@ -143,7 +143,7 @@ target_include_directories(osmpbf
     ${PBF_SOURCE_DIR}
 )
 
-add_dependencies(osmpbf osmpbf.protobuf)
+add_dependencies(osmpbf osmpbf-protobuf)
 
 target_link_libraries(osmpbf
   PRIVATE
