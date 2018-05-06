@@ -151,3 +151,20 @@ target_link_libraries(osmpbf
     ZLIB::zlib
     protobuf::libprotobuf
 )
+
+# ------------------------------------------------------------------------------------------------ #
+# Benchmarks                                                                                       #
+# ------------------------------------------------------------------------------------------------ #
+
+if(OSMPBF_BUILD_BENCHMARKS)
+  add_executable(osmpbf-benchmarks
+    benchmarks/main.cpp
+    benchmarks/b_test.cpp
+  )
+
+  target_link_libraries(osmpbf-benchmarks
+    PRIVATE
+      benchmark::benchmark
+      osmpbf
+  )
+endif()
