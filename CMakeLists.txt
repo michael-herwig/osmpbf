@@ -112,6 +112,16 @@ if(OSMPBF_ENABLE_CPPCHECK)
   if(NOT CMAKE_CXX_CPPCHECK)
     message(FATAL_ERROR "Could not find cppcheck.")
   endif()
+  list(APPEND CMAKE_CXX_CPPCHECK
+    --enable=all
+    --template=vs
+    --xml
+  )
+  if(WIN32)
+    list(APPEND CMAKE_CXX_CPPCHECK --platform=windows)
+  elseif(UNIX)
+    list(APPEND CMAKE_CXX_CPPCHECK --platform=linux)
+  endif()
 endif()
 
 # ------------------------------------------------------------------------------------------------ #
