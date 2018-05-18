@@ -63,6 +63,7 @@ project(osmpbf
 
 option(OSMPBF_BUILD_TESTS "Enables integration of test suites" OFF)
 option(OSMPBF_BUILD_BENCHMARKS "Enables integration of benchmarks" OFF)
+option(OSMPBF_BUILD_DOCS "Enables integration of doxygen documentation generation" OFF)
 
 option(OSMPBF_ENABLE_CPPCHECK "Enables static analyzer 'cppcheck'" OFF)
 
@@ -152,10 +153,15 @@ add_custom_target(osmpbf-protobuf
 # Library: osmpbf                                                                                  #
 # ------------------------------------------------------------------------------------------------ #
 
-add_library(osmpbf STATIC
+set(SOURCE_FILES
+  include/osmpbf/osmpbf
+  include/osmpbf/osmpbf.hpp
+
   source/fileformat.cpp
   source/osmformat.cpp
 )
+
+add_library(osmpbf STATIC ${SOURCE_FILES})
 
 target_include_directories(osmpbf
   PRIVATE
@@ -206,5 +212,16 @@ if(OSMPBF_BUILD_BENCHMARKS)
       Leathers::leathers
       benchmark::benchmark
       osmpbf
+  )
+endif()
+
+# ------------------------------------------------------------------------------------------------ #
+# Doxygen                                                                                          #
+# ------------------------------------------------------------------------------------------------ #
+
+if(OSMPBF_BUILD_DOCS)
+  find_package(Doxygen REQUIRED)
+  doxygen_add_docs(osmpbf-documentation
+    ${SOURCE_FILES}
   )
 endif()
