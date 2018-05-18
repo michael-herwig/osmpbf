@@ -13,7 +13,7 @@ before_build:
     MKDIR build
     CD build
     cmake --version
-    cmake .. -G %generator% "-DCMAKE_BUILD_TYPE=%configuration%"
+    cmake .. -G %generator% "-DCMAKE_BUILD_TYPE=%configuration%" -DOSMPBF_BUILD_TESTS=ON
     cmake --build . --config %configuration% -- /nologo
 
 build_script:
